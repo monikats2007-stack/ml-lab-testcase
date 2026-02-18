@@ -1,0 +1,30 @@
+import math
+
+data=[[1,1,1,'Yes'],[1,0,1,'Yes'],[0,1,0,'Yes'],
+      [0,0,1,'No'],[0,0,0,'No'],[1,0,0,'No']]
+
+def mean(x): return sum(x)/len(x)
+def std(x): 
+    m=mean(x)
+    return math.sqrt(sum((i-m)**2 for i in x)/len(x))
+
+def gauss(x,m,s):
+    return 1 if s==0 and x==m else (1/(math.sqrt(2*math.pi)*s))*math.exp(-(x-m)**2/(2*s*s)) if s!=0 else 0
+
+classes={'Yes':[],'No':[]}
+for r in data: classes[r[3]].append(r[:3])
+
+summary={c:[(mean(col),std(col)) for col in zip(*rows)] for c,rows in classes.items()}
+
+test=[1,1,0]
+probs={}
+for c in classes:
+    p=len(classes[c])/len(data)
+    for i,(m,s) in enumerate(summary[c]):
+        p*=gauss(test[i],m,s)
+    probs[c]=p
+
+print("Test: Free=Yes, Win=Yes, Offer=No")
+print("Yes:",round(probs['Yes'],6))
+print("No :",round(probs['No'],6))
+print("Prediction:",max(probs,key=probs.get))
