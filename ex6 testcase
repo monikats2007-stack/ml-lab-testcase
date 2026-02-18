@@ -1,0 +1,23 @@
+import pandas as pd
+
+data = {
+    'Study_Hours': ['high', 'high', 'low', 'low', 'high', 'low'],
+    'Attendance': ['high', 'low', 'high', 'low', 'high', 'low'],
+    'Pass': ['yes', 'yes', 'yes', 'no', 'yes', 'no']
+}
+
+df = pd.DataFrame(data)
+
+evidence = {'Study_Hours': 'low', 'Attendance': 'high'}
+
+filtered = df
+for col, val in evidence.items():
+    filtered = filtered[filtered[col] == val]
+
+if len(filtered) > 0:
+    prediction = filtered['Pass'].value_counts().idxmax()
+    print(f"Prediction for Pass given {evidence}: {prediction}")
+else:
+    print(f"No matching data for evidence {evidence}")
+
+
